@@ -14,7 +14,7 @@ typedef struct {
   char product[6] = {'\0'};
   char destination[41] = {'\0'};
   char platform[11] = {'\0'};
-} departure;
+} Departure;
 
 ESP8266WiFiMulti WiFiMulti;
 
@@ -22,7 +22,7 @@ HTTPClient http;
 
 void connectWiFi();
 void initOTA();
-bool checkTrains(departure trains[]);
+bool checkTrains(Departure trains[]);
 
 void setup() {
   USE_SERIAL.begin(/*115200*/9600);
@@ -39,7 +39,7 @@ void setup() {
   http.setReuse(true);
 }
 
-void displayDeparture(departure train) {
+void displayDeparture(Departure train) {
   Serial.print("\x02L1");
   Serial.print(strlen(train.actual) > 0 ? train.actual : train.planned);
   Serial.print(" (");
@@ -71,7 +71,7 @@ void loop() {
 
   // wait for WiFi connection
   if (millis() - lastMillis >= CHECK_INTERVAL && WiFiMulti.run() == WL_CONNECTED) {
-    departure trains[5];
+    Departure trains[5];
     if (checkTrains(trains)) {
       Serial.println("Abfahrtszeiten:");
       for (uint8_t i = 0; i < 5; i++) {
@@ -99,7 +99,7 @@ void loop() {
   ArduinoOTA.handle();
 }
 
-bool checkTrains(departure trains[]) {
+bool checkTrains(Departure trains[]) {
   bool success = false;
   // http://fahrinfo.vbb.de/bin/stboard.exe/dn?input=9037168&boardType=dep&time=16:03&maxJourneys=50&dateBegin=04.06.16&dateEnd=10.12.16&selectDate=today&productsFilter=111011101&start=yes&pageViewMode=PRINT&dirInput=&
   http.begin("http://fahrinfo.vbb.de/bin/stboard.exe/dn?input=9037168&boardType=dep&time=&maxJourneys=5&dateBegin=&dateEnd=&selectDate=today&productsFilter=111011101&start=yes&pageViewMode=PRINT&dirInput=&");

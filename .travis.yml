@@ -37,7 +37,8 @@ install:
    - pip install -U platformio
 
 before_script:
-   - echo "#define SSID ssid\n#define PASS pass" > src/Credentials.hpp
+   - echo "#define SSID \"ssid\"" >> src/Credentials.hpp
+   - echo "#define PASS \"pass\"" >> src/Credentials.hpp
 script:
    - platformio run
 
